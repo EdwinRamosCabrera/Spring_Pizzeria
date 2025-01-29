@@ -1,7 +1,7 @@
-package com.platzi.pizzeria_presto.web.controller;
+package com.platzi.pizzeria_presto.web.controlador;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Cliente;
-import com.platzi.pizzeria_presto.servicio.ClienteService;
+import com.platzi.pizzeria_presto.servicio.ClienteServicio;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cliente")
@@ -19,10 +18,10 @@ import java.util.Optional;
 public class ClienteController {
 
     @Autowired
-    private final ClienteService clienteService;
+    private final ClienteServicio clienteServicio;
     @Autowired
-    public ClienteController(ClienteService clienteService){
-        this.clienteService = clienteService;
+    public ClienteController(ClienteServicio clienteServicio){
+        this.clienteServicio = clienteServicio;
     }
 
     @Operation(
@@ -35,7 +34,7 @@ public class ClienteController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> getClientId(@PathVariable Long id){
-        return clienteService.getClienteId(id)
+        return clienteServicio.getClienteId(id)
                 .map(cliente -> new ResponseEntity<>(cliente, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -49,7 +48,7 @@ public class ClienteController {
     )
     @GetMapping("/all")
     public ResponseEntity<List<Cliente>> getAllCliente(){
-        return clienteService.getAllCliente()
+        return clienteServicio.getAllCliente()
                 .map(clientes -> new ResponseEntity<>(clientes, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -64,7 +63,7 @@ public class ClienteController {
     @PostMapping("/")
     public ResponseEntity<Cliente> save(@RequestBody Cliente cliente){
         try{
-            return new ResponseEntity<>(clienteService.save(cliente), HttpStatus.CREATED);
+            return new ResponseEntity<>(clienteServicio.save(cliente), HttpStatus.CREATED);
         } catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -80,7 +79,7 @@ public class ClienteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Long id){
         try{
-            return new ResponseEntity<>(clienteService.delete(id), HttpStatus.OK);
+            return new ResponseEntity<>(clienteServicio.delete(id), HttpStatus.OK);
         }catch(RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,7 +1,7 @@
-package com.platzi.pizzeria_presto.web.controller;
+package com.platzi.pizzeria_presto.web.controlador;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Pedido;
-import com.platzi.pizzeria_presto.servicio.PedidoService;
+import com.platzi.pizzeria_presto.servicio.PedidoServicio;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -19,10 +18,10 @@ import java.util.Optional;
 public class PedidoController {
 
     @Autowired
-    private final PedidoService pedidoService;
+    private final PedidoServicio pedidoServicio;
     @Autowired
-    public PedidoController(PedidoService pedidoService){
-        this.pedidoService = pedidoService;
+    public PedidoController(PedidoServicio pedidoServicio){
+        this.pedidoServicio = pedidoServicio;
     }
     @Operation(
             summary = "Búsqueda de pedido",
@@ -34,7 +33,7 @@ public class PedidoController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<Pedido> getPedidoId(@PathVariable long id){
-        return pedidoService.getPedidoId(id)
+        return pedidoServicio.getPedidoId(id)
                 .map(pedido -> new ResponseEntity<>(pedido, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -48,7 +47,7 @@ public class PedidoController {
     )
     @GetMapping("/all")
     public ResponseEntity<List<Pedido>> getAllPedido(){
-        return pedidoService.getAllPedido()
+        return pedidoServicio.getAllPedido()
                 .map(pedido -> new ResponseEntity<>(pedido, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -63,7 +62,7 @@ public class PedidoController {
     @PostMapping("/")
     public ResponseEntity<Pedido> save(@RequestBody Pedido pedido){
         try{
-            return new ResponseEntity<>(pedidoService.save(pedido), HttpStatus.CREATED);
+            return new ResponseEntity<>(pedidoServicio.save(pedido), HttpStatus.CREATED);
         }catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -78,7 +77,7 @@ public class PedidoController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable long id){
-        if(pedidoService.delete(id)){
+        if(pedidoServicio.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

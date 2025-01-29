@@ -1,5 +1,6 @@
 package com.platzi.pizzeria_presto.persistencia.entidad;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class Pedido {
     @Column(name = "id_detalle_pedido", nullable = false)
     private Integer detallePedidoId;
 
-    @Column(name = "monto_total", nullable = false)
+    @Column(name = "monto_total", nullable = false, columnDefinition = "Decimal(6,2)")
     private Double montoTotal;
 
     @Column(name = "metodo_pago", nullable = false)
@@ -44,8 +45,9 @@ public class Pedido {
     @Column(length = 200)
     private String comentarios;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
+    @JsonIgnore
     private Cliente cliente;
 
     @OneToMany(mappedBy = "pedido")

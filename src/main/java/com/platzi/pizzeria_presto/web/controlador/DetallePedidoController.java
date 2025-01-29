@@ -1,7 +1,7 @@
-package com.platzi.pizzeria_presto.web.controller;
+package com.platzi.pizzeria_presto.web.controlador;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.DetallePedido;
-import com.platzi.pizzeria_presto.servicio.DetallePedidoService;
+import com.platzi.pizzeria_presto.servicio.DetallePedidoServicio;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/detalles_pedidos")
@@ -19,10 +18,10 @@ import java.util.Optional;
 public class DetallePedidoController {
 
     @Autowired
-    private final DetallePedidoService detallePedidoService;
+    private final DetallePedidoServicio detallePedidoServicio;
     @Autowired
-    public DetallePedidoController(DetallePedidoService detallePedidoService){
-        this.detallePedidoService = detallePedidoService;
+    public DetallePedidoController(DetallePedidoServicio detallePedidoServicio){
+        this.detallePedidoServicio = detallePedidoServicio;
     }
 
     @Operation(
@@ -35,7 +34,7 @@ public class DetallePedidoController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<DetallePedido> getDetallePedidoId(@PathVariable long id){
-        return detallePedidoService.getDetallePedidoId(id)
+        return detallePedidoServicio.getDetallePedidoId(id)
                 .map(detalle -> new ResponseEntity<>(detalle, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -49,7 +48,7 @@ public class DetallePedidoController {
     )
     @GetMapping("/all")
     public ResponseEntity<List<DetallePedido>> getAllDetallePedido(){
-        return detallePedidoService.getAllDetallePedido()
+        return detallePedidoServicio.getAllDetallePedido()
                 .map(detalle -> new ResponseEntity<>(detalle, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -64,7 +63,7 @@ public class DetallePedidoController {
     @PostMapping("/")
     public ResponseEntity<DetallePedido> save(@RequestBody DetallePedido detallePedido){
         try {
-            return new ResponseEntity<>(detallePedidoService.save(detallePedido), HttpStatus.CREATED);
+            return new ResponseEntity<>(detallePedidoServicio.save(detallePedido), HttpStatus.CREATED);
         } catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -79,7 +78,7 @@ public class DetallePedidoController {
     )
     @DeleteMapping("{id}")
     public ResponseEntity<Boolean> delete(@PathVariable long id){
-        if(detallePedidoService.delete(id)){
+        if(detallePedidoServicio.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

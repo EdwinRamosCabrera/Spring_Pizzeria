@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PedidoService {
+public class PedidoServicio {
 
     @Autowired
     private final PedidoRepository pedidoRepository;
     @Autowired
-    public PedidoService(PedidoRepository pedidoRepository){
+    public PedidoServicio(PedidoRepository pedidoRepository){
         this.pedidoRepository = pedidoRepository;
     }
 

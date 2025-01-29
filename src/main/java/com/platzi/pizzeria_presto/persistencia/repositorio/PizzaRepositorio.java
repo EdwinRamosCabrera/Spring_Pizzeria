@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PizzaRepository extends CrudRepository<Pizza, Integer> {
+public interface PizzaRepositorio extends CrudRepository<Pizza, Integer> {
 }
