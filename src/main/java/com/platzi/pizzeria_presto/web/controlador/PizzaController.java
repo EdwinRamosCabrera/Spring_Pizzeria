@@ -1,7 +1,7 @@
-package com.platzi.pizzeria_presto.web.controller;
+package com.platzi.pizzeria_presto.web.controlador;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Pizza;
-import com.platzi.pizzeria_presto.servicio.PizzaService;
+import com.platzi.pizzeria_presto.servicio.PizzaServicio;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/pizzas")
@@ -19,10 +18,10 @@ import java.util.Optional;
 public class PizzaController {
 
     @Autowired
-    private final PizzaService pizzaService;
+    private final PizzaServicio pizzaServicio;
     @Autowired
-    public PizzaController(PizzaService pizzaService){
-        this.pizzaService = pizzaService;
+    public PizzaController(PizzaServicio pizzaServicio){
+        this.pizzaServicio = pizzaServicio;
     }
 
     @Operation(
@@ -35,7 +34,7 @@ public class PizzaController {
     )
     @GetMapping("/{id}")
     public ResponseEntity<Pizza> getPizzaId(@PathVariable int id){
-        return pizzaService.getPizzaId(id)
+        return pizzaServicio.getPizzaId(id)
                 .map(pizza -> new ResponseEntity<>(pizza, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -49,7 +48,7 @@ public class PizzaController {
     )
     @GetMapping("/all")
     public ResponseEntity<List<Pizza>> getAllPizza(){
-        return pizzaService.getAllPizza()
+        return pizzaServicio.getAllPizza()
                 .map(pizza -> new ResponseEntity<>(pizza, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -64,7 +63,7 @@ public class PizzaController {
     @PostMapping("/")
     public ResponseEntity<Pizza> save(@RequestBody Pizza pizza){
         try{
-            return new ResponseEntity<>(pizzaService.save(pizza), HttpStatus.CREATED);
+            return new ResponseEntity<>(pizzaServicio.save(pizza), HttpStatus.CREATED);
         } catch(RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -79,10 +78,57 @@ public class PizzaController {
     )
     @DeleteMapping("{id}")
     public ResponseEntity<Boolean> delete(@PathVariable int id){
-        if(pizzaService.delete(id)){
+        if(pizzaServicio.delete(id)){
             return new ResponseEntity<>(HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(
+            summary = "Lista de pizzas disponibles",
+            description = "Muestra la lista de pizzas que están disponibles de la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/available/{estado}")
+    public ResponseEntity<List<Pizza>> getPizzaAvailable(@PathVariable String estado){
+        return this.pizzaServicio.getAllByAvailable(estado)
+                .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    @Operation(
+            summary = "Lista de pizzas por nombre",
+            description = "Muestra la lista de pizzas por su nombre en la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Pizza>> getPizzaName(@PathVariable String name){
+        try{
+            return ResponseEntity.ok(pizzaServicio.getAllByName(name));
+        }catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+    @Operation(
+            summary = "Lista de pizzas por descripción",
+            description = "Muestra la lista de pizzas por su descripción en la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/description/{ingrediente}")
+    public ResponseEntity<List<Pizza>> getPizzaDescription(@PathVariable String ingrediente){
+        try{
+            return ResponseEntity.ok(this.pizzaServicio.getAllByDescription(ingrediente));
+        }catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
         }
     }
 }

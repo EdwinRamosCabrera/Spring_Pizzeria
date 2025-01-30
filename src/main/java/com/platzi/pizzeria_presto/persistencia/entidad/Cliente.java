@@ -1,5 +1,6 @@
 package com.platzi.pizzeria_presto.persistencia.entidad;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -40,5 +41,6 @@ public class Cliente {
     private String telefono;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Pedido> pedidoList;
 }

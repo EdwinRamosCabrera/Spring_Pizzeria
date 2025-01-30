@@ -1,5 +1,6 @@
 package com.platzi.pizzeria_presto.persistencia.entidad;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,17 +29,18 @@ public class DetallePedido {
     @Column(nullable = false)
     private Integer cantidad;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "Decimal(5,2)")
     private Double precio;
 
     @Column(length = 200)
     private String comentarios;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pedido",referencedColumnName = "id_pedido", insertable = false, updatable = false)
+    @JsonIgnore
     private Pedido pedido;
 
     @ManyToOne
-    @JoinColumn(name = "id_pizza", insertable = false, updatable = false)
+    @JoinColumn(name = "id_pizza", referencedColumnName = "id_pizza", insertable = false, updatable = false)
     private Pizza pizza;
 }
