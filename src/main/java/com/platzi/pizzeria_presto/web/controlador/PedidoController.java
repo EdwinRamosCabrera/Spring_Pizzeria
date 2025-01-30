@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -82,5 +83,40 @@ public class PedidoController {
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Operation(
+            summary = "Pedidos de hoy",
+            description = "Muestra los pedidos del dia de hoy de la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pedidos encontrados correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pedido no encontrados")
+            }
+    )
+    @GetMapping("/today")
+    public ResponseEntity<List<Pedido>> getTodayOrders(){
+        try{
+            return ResponseEntity.ok(this.pedidoServicio.getTodayOrders());
+        }catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Pedidos externos",
+            description = "Muestra los pedidos que no se consumieron dentro de la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pedidos encontrados correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pedido no encontrados")
+            }
+    )
+    @GetMapping("/outside")
+    public ResponseEntity<List<Pedido>> getOutsideOrders(){
+        try{
+            return ResponseEntity.ok(this.pedidoServicio.getOutsideOrders());
+        }catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }

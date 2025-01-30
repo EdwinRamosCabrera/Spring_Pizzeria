@@ -20,24 +20,45 @@ public class PizzaServicio {
     }
 
     public Optional<Pizza> getPizzaId(int id){
-        return pizzaRepositorio.findById(id);
+        return this.pizzaRepositorio.findById(id);
     }
 
     public Optional<List<Pizza>> getAllPizza(){
-        List<Pizza> pizzaList = (List<Pizza>) pizzaRepositorio.findAll();
+        List<Pizza> pizzaList = (List<Pizza>) this.pizzaRepositorio.findAll();
         return Optional.of(pizzaList);
     }
 
     public Pizza save(Pizza pizza){
-        return pizzaRepositorio.save(pizza);
+        return this.pizzaRepositorio.save(pizza);
     }
 
     public boolean delete(int id){
         if(getPizzaId(id).isPresent()){
-            pizzaRepositorio.deleteById(id);
+            this.pizzaRepositorio.deleteById(id);
             return true;
         } else {
             return false;
         }
+    }
+
+    public Optional<List<Pizza>> getAllByAvailable(String estado){
+        return Optional.of(this.pizzaRepositorio.findAllByEstadoOrderByPrecio(estado));
+    }
+
+    public List<Pizza> getAllByName(String nombre){
+        return this.pizzaRepositorio.findAllByNombreIgnoreCaseOrderByPizzaId(nombre);
+    }
+
+    public List<Pizza> getAllByDescription(String description){
+        return this.pizzaRepositorio.findAllByDescripcionContainingIgnoreCase(description);
+    }
+
+    public Pizza getFirstByEstadoAndName(String estado, String nombre){
+        return this.pizzaRepositorio.findFirstByEstadoAndNombreIgnoreCase(estado, nombre)
+                .orElseThrow(()-> new RuntimeException("La pizza no existe"));
+    }
+
+    public List<Pizza> get3Cheapest(double precio){
+        return this.pizzaRepositorio.findTop3ByEstadoAndPrecioLessThanEqualOrderByPrecio(precio);
     }
 }

@@ -84,4 +84,51 @@ public class PizzaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @Operation(
+            summary = "Lista de pizzas disponibles",
+            description = "Muestra la lista de pizzas que están disponibles de la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/available/{estado}")
+    public ResponseEntity<List<Pizza>> getPizzaAvailable(@PathVariable String estado){
+        return this.pizzaServicio.getAllByAvailable(estado)
+                .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    @Operation(
+            summary = "Lista de pizzas por nombre",
+            description = "Muestra la lista de pizzas por su nombre en la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Pizza>> getPizzaName(@PathVariable String name){
+        try{
+            return ResponseEntity.ok(pizzaServicio.getAllByName(name));
+        }catch (RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+    @Operation(
+            summary = "Lista de pizzas por descripción",
+            description = "Muestra la lista de pizzas por su descripción en la Pizzeria",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pizzas encontradas correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Pizzas no encontradas")
+            }
+    )
+    @GetMapping("/description/{ingrediente}")
+    public ResponseEntity<List<Pizza>> getPizzaDescription(@PathVariable String ingrediente){
+        try{
+            return ResponseEntity.ok(this.pizzaServicio.getAllByDescription(ingrediente));
+        }catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
