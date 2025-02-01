@@ -50,7 +50,7 @@ public class Pedido {
     @JsonIgnore
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
+    @OrderBy("precio ASC")
     private List<DetallePedido> detallePedidoList;
-
 }

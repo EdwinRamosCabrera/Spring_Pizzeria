@@ -101,7 +101,6 @@ public class PedidoController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @Operation(
             summary = "Pedidos externos",
             description = "Muestra los pedidos que no se consumieron dentro de la Pizzeria",
@@ -117,6 +116,5 @@ public class PedidoController {
         }catch(RuntimeException e){
             return ResponseEntity.notFound().build();
         }
-
     }
 }
