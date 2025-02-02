@@ -24,4 +24,14 @@ public class PedidoQueryController {
     public ResponseEntity<List<Pedido>> getByCliente(@PathVariable String idCliente){
         return ResponseEntity.ok(this.pedidoQueryService.getByCliente(idCliente));
     }
+
+    @GetMapping("sumary/{pedidoId}")
+    public ResponseEntity<Pedido> getSumaryPedido(@PathVariable long pedidoId){
+        Pedido pedido = this.pedidoQueryService.getSumaryPedido(pedidoId);
+        try{
+            return ResponseEntity.ok(pedido);
+        } catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

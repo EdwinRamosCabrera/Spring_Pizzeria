@@ -19,4 +19,8 @@ public class PedidoQueryService {
     public List<Pedido> getByCliente(String idCliente){
         return this.pedidoQueryRepository.findPedidosCliente(idCliente);
     }
+
+    public Pedido getSumaryPedido(long pedidoId){
+        return this.getSumaryPedido(pedidoId);
+    }
 }
