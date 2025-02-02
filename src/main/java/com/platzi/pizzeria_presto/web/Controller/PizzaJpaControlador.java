@@ -1,8 +1,10 @@
 package com.platzi.pizzeria_presto.web.Controller;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Pizza;
+import com.platzi.pizzeria_presto.service.PizzaPagSortService;
 import com.platzi.pizzeria_presto.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class PizzaJpaControlador {
 
     private final PizzaService pizzaService;
+    private final PizzaPagSortService pizzaPagSortService;
     @Autowired
-    public PizzaJpaControlador(PizzaService pizzaService){
+    public PizzaJpaControlador(PizzaService pizzaService, PizzaPagSortService pizzaPagSortService){
         this.pizzaService = pizzaService;
+        this.pizzaPagSortService = pizzaPagSortService;
     }
 
     @GetMapping("/all")
@@ -70,5 +74,18 @@ public class PizzaJpaControlador {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<Page<Pizza>> getAllPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int elements){
+        return ResponseEntity.ok(this.pizzaPagSortService.getAll(page, elements));
+    }
+    @GetMapping("/sort")
+    public ResponseEntity<Page<Pizza>> getAllPageSort(String estado,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "5") int elements,
+                                                      @RequestParam(defaultValue = "price") String sortBy,
+                                                      @RequestParam(defaultValue = "ASC") String sortDirection){
+        return ResponseEntity.ok(this.pizzaPagSortService.getAllAvailable(estado, page, elements, sortBy, sortDirection));
     }
 }
