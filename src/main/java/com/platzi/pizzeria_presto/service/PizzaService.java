@@ -2,10 +2,13 @@ package com.platzi.pizzeria_presto.service;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Pizza;
 import com.platzi.pizzeria_presto.persistencia.repository.PizzaRepository;
+import com.platzi.pizzeria_presto.service.dto.UpdatePizzaPriceDto;
+import com.platzi.pizzeria_presto.service.exception.EmailApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +49,15 @@ public class PizzaService {
 
     public boolean exists(int id){
         return this.pizzaRepository.existsById(id);
+    }
+
+    @Transactional(noRollbackFor = EmailApiException.class)
+    public void updatePrice(UpdatePizzaPriceDto dto){
+        this.pizzaRepository.updateNewPrice(dto);
+        this.sendEnail();
+    }
+
+    private void sendEnail(){
+        throw new EmailApiException();
     }
 }

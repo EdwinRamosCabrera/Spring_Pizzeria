@@ -2,6 +2,8 @@ package com.platzi.pizzeria_presto.web.Controller;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Cliente;
 import com.platzi.pizzeria_presto.service.ClienteJPQLService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,14 @@ public class ClienteJPQLController {
         this.clienteJPQLService = clienteJPQLService;
     }
 
+    @Operation(
+            summary = "Cliente según su teléfono",
+            description = "Busca el cliente según el numero de teléfono",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Cliente encontrado correctamente"),
+                    @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
+            }
+    )
     @GetMapping("/phone/{phone}")
     public ResponseEntity<Cliente> getByPhone(@PathVariable String phone){
         return ResponseEntity.ok(this.clienteJPQLService.getByTelefono(phone));

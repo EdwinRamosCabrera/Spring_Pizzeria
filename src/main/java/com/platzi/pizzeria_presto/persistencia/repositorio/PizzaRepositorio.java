@@ -18,6 +18,7 @@ public interface PizzaRepositorio extends CrudRepository<Pizza, Integer> {
 
     public Optional<Pizza> findFirstByEstadoAndNombreIgnoreCase(String estado, String nombre);
 
-    public List<Pizza> findTop3ByEstadoAndPrecioLessThanEqualOrderByPrecio(double precio);
+    public List<Pizza> findTop3ByEstadoAndPrecioLessThanEqualOrderByPrecio(String estado, Double precio);
+
 
 }

@@ -3,6 +3,7 @@ package com.platzi.pizzeria_presto.web.Controller;
 import com.platzi.pizzeria_presto.persistencia.entidad.Pizza;
 import com.platzi.pizzeria_presto.service.PizzaPagSortService;
 import com.platzi.pizzeria_presto.service.PizzaService;
+import com.platzi.pizzeria_presto.service.dto.UpdatePizzaPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -87,5 +88,14 @@ public class PizzaJpaControlador {
                                                       @RequestParam(defaultValue = "price") String sortBy,
                                                       @RequestParam(defaultValue = "ASC") String sortDirection){
         return ResponseEntity.ok(this.pizzaPagSortService.getAllAvailable(estado, page, elements, sortBy, sortDirection));
+    }
+
+    @PutMapping("/price")
+    public ResponseEntity<Void> updatePrice(@RequestBody UpdatePizzaPriceDto dto){
+        if(this.pizzaService.exists(dto.getIdPizza())){
+            this.pizzaService.updatePrice(dto);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
