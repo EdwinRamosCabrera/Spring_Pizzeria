@@ -58,7 +58,7 @@ public class PizzaServicio {
                 .orElseThrow(()-> new RuntimeException("La pizza no existe"));
     }
 
-    public List<Pizza> get3Cheapest(double precio){
-        return this.pizzaRepositorio.findTop3ByEstadoAndPrecioLessThanEqualOrderByPrecio(precio);
+    public List<Pizza> get3Cheapest(String estado, double precio){
+        return this.pizzaRepositorio.findTop3ByEstadoAndPrecioLessThanEqualOrderByPrecio(estado, precio);
     }
 }

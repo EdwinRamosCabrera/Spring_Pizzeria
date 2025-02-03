@@ -1,6 +1,7 @@
 package com.platzi.pizzeria_presto.service;
 
 import com.platzi.pizzeria_presto.persistencia.entidad.Pedido;
+import com.platzi.pizzeria_presto.persistencia.projection.PedidoResumen;
 import com.platzi.pizzeria_presto.persistencia.repository.PedidoQueryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class PedidoQueryService {
         return this.pedidoQueryRepository.findPedidosCliente(idCliente);
     }
 
-    public Pedido getSumaryPedido(long pedidoId){
-        return this.getSumaryPedido(pedidoId);
+    public PedidoResumen getSumaryPedido(long pedidoId){
+        return this.pedidoQueryRepository.findSumaryPedido(pedidoId);
     }
 }
