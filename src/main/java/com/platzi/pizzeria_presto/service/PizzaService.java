@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class PizzaService {
         return this.pizzaRepository.existsById(id);
     }
 
-    @Transactional(noRollbackFor = EmailApiException.class)
+    @Transactional(noRollbackFor = EmailApiException.class, propagation = Propagation.REQUIRED)
     public void updatePrice(UpdatePizzaPriceDto dto){
         this.pizzaRepository.updateNewPrice(dto);
         this.sendEnail();
