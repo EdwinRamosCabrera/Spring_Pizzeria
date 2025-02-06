@@ -94,6 +94,7 @@ public class PizzaController {
             }
     )
     @GetMapping("/available/{estado}")
+    // @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<Pizza>> getPizzaAvailable(@PathVariable String estado){
         return this.pizzaServicio.getAllByAvailable(estado)
                 .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
