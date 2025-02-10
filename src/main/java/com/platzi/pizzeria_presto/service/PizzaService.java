@@ -7,6 +7,7 @@ import com.platzi.pizzeria_presto.service.exception.EmailApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class PizzaService {
         this.pizzaRepository = pizzaRepository;
     }
 
+    @Secured("ROLE_ADMIN")
     public List<Pizza> getAll(){
         return this.pizzaRepository.findAll();
     }
