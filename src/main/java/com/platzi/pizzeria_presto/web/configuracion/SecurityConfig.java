@@ -3,7 +3,9 @@ package com.platzi.pizzeria_presto.web.configuracion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,14 +27,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) // también se puede deshabilitar con: .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/pizzeria/api/pizzas/*").hasAnyRole("CUSTOMER")
+                        .requestMatchers("api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/pizzas/*").hasAnyRole("CUSTOMER")
                         // Solo ADMIN puede usar POST en pizzas
-                        .requestMatchers(HttpMethod.POST, "/pizzeria/api/pizzas/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "api/pizzas/*").hasRole("ADMIN")
                         // Solo ADMIN puede usar PUT en todos los métodos
                         .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                        .requestMatchers("/pizzeria/api/pedidos/*").hasRole("ADMIN")
-                        .requestMatchers("/pizzeria/api/cliente/*").denyAll()
-                        .requestMatchers("/pizzeria/api/detalles_pedidos/**").permitAll()
+                        .requestMatchers("api/pedidos/*").hasRole("ADMIN")
+                        .requestMatchers("api/cliente/*").denyAll()
+                        .requestMatchers("/api/detalles_pedidos/**").permitAll()
                         // Cualquier otra ruta necesita autenticación
                         .anyRequest()
                         .authenticated() // Proteger todas las demás rutas
@@ -58,7 +61,10 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, customer);
     }
      */
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager(); // para que utilice el AuthenticationManager por defecto.
+    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
