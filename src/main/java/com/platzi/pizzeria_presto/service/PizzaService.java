@@ -57,10 +57,10 @@ public class PizzaService {
     @Transactional(noRollbackFor = EmailApiException.class, propagation = Propagation.REQUIRED)
     public void updatePrice(UpdatePizzaPriceDto dto){
         this.pizzaRepository.updateNewPrice(dto);
-        this.sendEnail();
+        this.sendEmail();
     }
 
-    private void sendEnail(){
+    private void sendEmail(){
         throw new EmailApiException();
     }
 }

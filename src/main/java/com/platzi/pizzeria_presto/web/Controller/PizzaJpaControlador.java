@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pizza")
+@RequestMapping("api/pizza")
 public class PizzaJpaControlador {
 
     private final PizzaService pizzaService;
@@ -27,7 +27,11 @@ public class PizzaJpaControlador {
 
     @GetMapping("/all")
     public ResponseEntity<List<Pizza>> getAll(){
-        return ResponseEntity.ok(this.pizzaService.getAll());
+        try{
+            return ResponseEntity.ok(this.pizzaService.getAll());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")

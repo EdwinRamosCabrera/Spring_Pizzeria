@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping("api/pedidos")
 public class PedidoQueryController {
 
     private final PedidoQueryService pedidoQueryService;

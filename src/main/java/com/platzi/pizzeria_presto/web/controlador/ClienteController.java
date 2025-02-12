@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("api/cliente")
 @Tag(name = "Cliente", description = "Controlador para los clientes")
 public class ClienteController {
 

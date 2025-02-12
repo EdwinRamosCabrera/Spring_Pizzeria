@@ -35,4 +35,17 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<UserRole> userRoleList;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", locked=" + locked +
+                ", disable=" + disable +
+                ", userRoleList=" + userRoleList +
+                '}';
+    }
 }

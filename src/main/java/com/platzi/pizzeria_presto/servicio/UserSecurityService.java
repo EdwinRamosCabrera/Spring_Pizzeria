@@ -32,6 +32,8 @@ public class UserSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User " + username + " not found"));
+        System.out.println(user); // imprime los datos del user, pero primero se tiene que crear el método toString en la clase User
+
         String[] roles = user.getUserRoleList().stream().map(UserRole::getRolName).toArray(String[]::new);
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
