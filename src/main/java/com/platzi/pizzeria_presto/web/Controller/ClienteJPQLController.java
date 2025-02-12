@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("Cliente/")
+@RequestMapping("api/Cliente/")
 public class ClienteJPQLController {
 
     private final ClienteJPQLService clienteJPQLService;

@@ -1,5 +1,6 @@
 package com.platzi.pizzeria_presto.web.configuracion;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,31 +18,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    private final JwtFilter jwtFilter;
+    @Autowired
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()) // también se puede deshabilitar con: .cors(cors -> cors.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // nuestro proyecto no tendrá estado, no va a almacenar sesiones, cada vez que reciba una petición se va a validar como si fuera una petición completamente nueva
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "api/pizzas/*").hasAnyRole("CUSTOMER")
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pizzas/*").hasAnyRole("ADMIN")
                         // Solo ADMIN puede usar POST en pizzas
-                        .requestMatchers(HttpMethod.POST, "api/pizzas/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/pizzas/*").hasRole("ADMIN")
                         // Solo ADMIN puede usar PUT en todos los métodos
                         .requestMatchers(HttpMethod.PUT).hasRole("ADMIN")
-                        .requestMatchers("api/pedidos/*").hasRole("ADMIN")
-                        .requestMatchers("api/cliente/*").denyAll()
+                        .requestMatchers("/api/pedidos/*").hasRole("ADMIN")
+                        .requestMatchers("/api/cliente/*").denyAll()
                         .requestMatchers("/api/detalles_pedidos/**").permitAll()
                         // Cualquier otra ruta necesita autenticación
                         .anyRequest()
                         .authenticated() // Proteger todas las demás rutas
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults()); // Habilita autenticación básica
+                //.httpBasic(Customizer.withDefaults()); // Habilita autenticación básica
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // este usernamePasswordAuthenticationFilter es el primer filtro de seguridad de autenticación ue tiene Spring
         return http.build();
     }
     /*

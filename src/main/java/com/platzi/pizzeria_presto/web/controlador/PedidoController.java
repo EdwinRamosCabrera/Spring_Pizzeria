@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping("api/pedidos")
 @Tag(name = "Pedido", description = "Controlador para los pedidos")
 public class PedidoController {
 
